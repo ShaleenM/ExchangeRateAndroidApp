@@ -11,13 +11,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ForexRateWorker.AsyncResponse {
+public class MainActivity
+        extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+                   ForexRateWorker.AsyncResponse,
+                    Spinner.OnItemSelectedListener{
 
     ArrayList<String> ratesList = new ArrayList<>();
     ArrayAdapter<String> rateListAdapter ;
@@ -44,7 +50,12 @@ public class MainActivity extends AppCompatActivity
         forexRateListView = (ListView) findViewById(R.id.forexratelist);
         forexRateListView.setAdapter(rateListAdapter);
 
-        new ForexRateWorker(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "USD", ratesList);
+        // Set Base Value Spinner
+        Spinner baseValueSpinner = (Spinner) findViewById(R.id.spinner_base);
+        baseValueSpinner.setAdapter(rateListAdapter);
+
+        // TODO: 6/26/17 Get Currency from previous session's last selected currency.
+        createForexRateWorker("USD");
 
     }
 
@@ -59,25 +70,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onStop(){
+        super.onStop();
+        // TODO: 6/26/17 Save current base currency for next instance on this activity (for next time we open app).
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -115,6 +120,26 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        Log.d("Testing", "Response In Main Thread ::"  + ratesList.toString());
+        Log.d("Testing", "Response In Main Thread ::" + ratesList.toString());
+    }
+
+    private void createForexRateWorker(String base){
+        if(base == null || base.length() == 0){
+            Log.e("Exception", "Base Currency Exception: No Base currency found");
+            return;
+            // TODO: 6/26/17 Create exception classes for different kind of exceptions like base currency exception.
+        }
+        new ForexRateWorker(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, base, ratesList);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // Update Base Currency on option select.
+        // TODO: 6/26/17 1. Get from adapter the rate selected. 2. Update the base rate variable. 3. Call create worker with new base
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Nothing required here for our use cases.
     }
 }

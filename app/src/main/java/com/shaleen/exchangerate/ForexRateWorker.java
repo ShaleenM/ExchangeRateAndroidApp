@@ -60,7 +60,7 @@ public class ForexRateWorker extends AsyncTask{
 
             Iterator<String> keys = jsonRates.keys();
 
-
+            // TODO: 6/26/17 Store currency and rate in custom object. 
             while(keys.hasNext()){
                 String currency = keys.next();
                 ratesList.add(currency + "::" + jsonRates.get(currency));
