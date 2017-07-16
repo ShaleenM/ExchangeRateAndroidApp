@@ -10,15 +10,17 @@ import java.util.HashMap;
  */
 public class ForexRateData {
 
-    private HashMap<String, String> rateMap;
+    private HashMap<String, CurrRatePair> rateMap;
+    public ArrayList<CurrRatePair> currRatePairArrayList;
     public ArrayList<String> currList;
 
     public ForexRateData() {
         this.rateMap = new HashMap<>();
         this.currList = new ArrayList<>();
+        this.currRatePairArrayList = new ArrayList<>();
     }
 
-    public HashMap<String, String> getRateMap() {
+    public HashMap<String, CurrRatePair> getRateMap() {
         return rateMap;
     }
 
@@ -26,12 +28,25 @@ public class ForexRateData {
         return currList;
     }
 
-    public void addRate(String curr, String rate){
-        if(curr == null || curr.length() == 0 || rate == null || rate.length() == 0){
+    public void addRate(String curr, CurrRatePair currRatePair){
+        if(curr == null || curr.length() == 0){
             Log.d("Warning", "Curr / Rate is null / empty");
             return;
         }
-        rateMap.put(curr, rate);
+        rateMap.put(curr, currRatePair);
         currList.add(curr);
+        currRatePairArrayList.add(currRatePair);
+    }
+
+    public ArrayList<CurrRatePair> getCurrRatePairArrayList() {
+        return currRatePairArrayList;
+    }
+
+    public void setCurrRatePairArrayList(ArrayList<CurrRatePair> currRatePairArrayList) {
+        this.currRatePairArrayList = currRatePairArrayList;
+    }
+
+    public void setCurrList(ArrayList<String> currList) {
+        this.currList = currList;
     }
 }

@@ -26,8 +26,10 @@ public class MainActivity
                     Spinner.OnItemSelectedListener{
 
     ForexRateData ratesData = new ForexRateData();
-    ArrayList<String> currList = ratesData.currList;
-    ArrayAdapter<String> rateListAdapter ;
+    ArrayList<CurrRatePair> currRatePairArrayList = ratesData.getCurrRatePairArrayList();
+    ArrayList<String> currList = ratesData.getCurrList();
+    Adapter rateListAdapter ;
+    ArrayAdapter<String> spinnerAdapter;
     ListView forexRateListView ;
 
 
@@ -47,13 +49,14 @@ public class MainActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        rateListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, currList);
+        rateListAdapter = new Adapter(this, R.layout.list_item, currRatePairArrayList);
         forexRateListView = (ListView) findViewById(R.id.forexratelist);
         forexRateListView.setAdapter(rateListAdapter);
 
         // Set Base Value Spinner
         Spinner baseValueSpinner = (Spinner) findViewById(R.id.spinner_base);
-        baseValueSpinner.setAdapter(rateListAdapter);
+        spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currList);
+        baseValueSpinner.setAdapter(spinnerAdapter);
 
         // TODO: 6/26/17 Get Currency from previous session's last selected currency.
         createForexRateWorker("USD");
@@ -118,9 +121,9 @@ public class MainActivity
             @Override
             public void run() {
                 rateListAdapter.notifyDataSetChanged();
+                spinnerAdapter.notifyDataSetChanged();
             }
         });
-
         Log.d("Testing", "Response In Main Thread ::" + currList.toString());
     }
 

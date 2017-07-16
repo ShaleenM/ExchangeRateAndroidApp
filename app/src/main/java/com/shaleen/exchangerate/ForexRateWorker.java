@@ -14,6 +14,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 
+import com.shaleen.exchangerate.*;
+
+
+
+
 /**
  * Created by Aditi Asthana, Shaleen Mathur on 6/11/17.
  */
@@ -65,9 +70,8 @@ public class ForexRateWorker extends AsyncTask{
 
             while(keys.hasNext()){
                 String currency = keys.next();
-//                ratesList.add(currency + "::" + jsonRates.get(currency));
-
-                forexRateData.addRate(currency, ""+jsonRates.get(currency));
+                forexRateData.addRate(currency, new CurrRatePair(currency,(Double) jsonRates.get(currency)));
+//                forexRateData.addRate(currency, ""+jsonRates.get(currency));
             }
 
             response.ratesFetchingComplete();
