@@ -25,7 +25,8 @@ public class MainActivity
                    ForexRateWorker.AsyncResponse,
                     Spinner.OnItemSelectedListener{
 
-    ArrayList<String> ratesList = new ArrayList<>();
+    ForexRateData ratesData = new ForexRateData();
+    ArrayList<String> currList = ratesData.currList;
     ArrayAdapter<String> rateListAdapter ;
     ListView forexRateListView ;
 
@@ -46,7 +47,7 @@ public class MainActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        rateListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, ratesList);
+        rateListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, currList);
         forexRateListView = (ListView) findViewById(R.id.forexratelist);
         forexRateListView.setAdapter(rateListAdapter);
 
@@ -120,7 +121,7 @@ public class MainActivity
             }
         });
 
-        Log.d("Testing", "Response In Main Thread ::" + ratesList.toString());
+        Log.d("Testing", "Response In Main Thread ::" + currList.toString());
     }
 
     private void createForexRateWorker(String base){
@@ -129,7 +130,7 @@ public class MainActivity
             return;
             // TODO: 6/26/17 Create exception classes for different kind of exceptions like base currency exception.
         }
-        new ForexRateWorker(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, base, ratesList);
+        new ForexRateWorker(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, base, ratesData);
     }
 
     @Override

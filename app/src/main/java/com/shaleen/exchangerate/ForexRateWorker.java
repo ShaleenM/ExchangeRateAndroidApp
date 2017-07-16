@@ -31,7 +31,7 @@ public class ForexRateWorker extends AsyncTask{
 
     @Override
     protected Object doInBackground(Object[] params) {
-        ArrayList<String> ratesList = (ArrayList<String>) params[1];
+        ForexRateData forexRateData = (ForexRateData) params[1];
         try {
             StringBuilder dataStr = null;
             URL website = new URL("http://api.fixer.io/latest?base=" + params[0]);
@@ -56,14 +56,18 @@ public class ForexRateWorker extends AsyncTask{
             JSONObject json = new JSONObject(dataStr.toString());
             JSONObject jsonRates = (JSONObject) json.get("rates");
             Log.d("Testing", "Length of Json Response ::" + jsonRates.length());
-            ratesList.clear();
+//            ratesList.clear();
 
             Iterator<String> keys = jsonRates.keys();
 
-            // TODO: 6/26/17 Store currency and rate in custom object. 
+            // TODO: 6/26/17 Store currency and rate in custom object.
+
+
             while(keys.hasNext()){
                 String currency = keys.next();
-                ratesList.add(currency + "::" + jsonRates.get(currency));
+//                ratesList.add(currency + "::" + jsonRates.get(currency));
+
+                forexRateData.addRate(currency, ""+jsonRates.get(currency));
             }
 
             response.ratesFetchingComplete();
