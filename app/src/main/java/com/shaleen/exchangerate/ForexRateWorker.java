@@ -67,7 +67,7 @@ public class ForexRateWorker extends AsyncTask{
 
             // TODO: 6/26/17 Store currency and rate in custom object.
 
-
+            forexRateData.cleanObject();
             while(keys.hasNext()){
                 String currency = keys.next();
                 forexRateData.addRate(currency, new CurrRatePair(currency,(Double) jsonRates.get(currency)));

@@ -25,6 +25,8 @@ public class MainActivity
                    ForexRateWorker.AsyncResponse,
                     Spinner.OnItemSelectedListener{
 
+    String TAG = this.getClass().getCanonicalName();
+    String base = "USD";
     ForexRateData ratesData = new ForexRateData();
     ArrayList<CurrRatePair> currRatePairArrayList = ratesData.getCurrRatePairArrayList();
     ArrayList<String> currList = ratesData.getCurrList();
@@ -55,11 +57,12 @@ public class MainActivity
 
         // Set Base Value Spinner
         Spinner baseValueSpinner = (Spinner) findViewById(R.id.spinner_base);
+        baseValueSpinner.setOnItemSelectedListener(this);
         spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currList);
         baseValueSpinner.setAdapter(spinnerAdapter);
 
         // TODO: 6/26/17 Get Currency from previous session's last selected currency.
-        createForexRateWorker("USD");
+        createForexRateWorker(base);
 
     }
 
@@ -139,7 +142,8 @@ public class MainActivity
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // Update Base Currency on option select.
-        // TODO: 6/26/17 1. Get from adapter the rate selected. 2. Update the base rate variable. 3. Call create worker with new base
+        base = spinnerAdapter.getItem(position);
+        createForexRateWorker(base);
     }
 
     @Override

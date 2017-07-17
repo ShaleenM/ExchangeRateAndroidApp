@@ -3,6 +3,8 @@ package com.shaleen.exchangerate;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -10,6 +12,7 @@ import java.util.HashMap;
  */
 public class ForexRateData {
 
+    // TODO: 7/16/17 Hardcode Currency List to Fix the issue of spinner not showing the correct base rate. 
     private HashMap<String, CurrRatePair> rateMap;
     public ArrayList<CurrRatePair> currRatePairArrayList;
     public ArrayList<String> currList;
@@ -36,6 +39,17 @@ public class ForexRateData {
         rateMap.put(curr, currRatePair);
         currList.add(curr);
         currRatePairArrayList.add(currRatePair);
+    }
+
+    public void cleanObject(){
+        rateMap.clear();
+        currList.clear();
+        currRatePairArrayList.clear();
+    }
+
+    public void sortData(){
+        Collections.sort(currList);
+        ;
     }
 
     public ArrayList<CurrRatePair> getCurrRatePairArrayList() {
